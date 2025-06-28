@@ -2,105 +2,65 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Staking sécurisé de vos LYX via Universal Page." />
-  <title>Vault LYX Staking</title>
-
-  <!-- LUKSO library -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connecteur UP Minimal</title>
   <script src="https://unpkg.com/@lukso/web-components@latest/dist/index.js" defer></script>
-  <script defer>
-    window.addEventListener('DOMContentLoaded', () => {
-      const btn = document.getElementById('connect-btn');
-      const info = document.getElementById('profile-info');
-      const span = document.getElementById('up-address');
-
-      btn.addEventListener('click', async () => {
-        try {
-          const provider = await window.lukso.connect();
-          const accounts = await provider.request({ method: 'eth_accounts' });
-          if (accounts.length) {
-            info.style.display = 'block';
-            span.textContent = accounts[0];
-          }
-        } catch (e) {
-          alert("Échec connexion : " + e.message);
-        }
-      });
-    });
-  </script>
-
   <style>
-    :root {
-      --bg: #121212;
-      --card: #1f1f1f;
-      --accent: #e0b3ff;
-      --text: #fff;
-    }
     body {
-      margin: 0; padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background-color: #121212;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
     }
-    .container {
-      background: var(--card);
-      padding: 2rem;
-      border-radius: 1.5rem;
-      box-shadow: 0 6px 20px rgba(224,179,255,0.15);
-      width: 90%; max-width: 800px;
-      text-align: center;
-    }
-    h2 { color: var(--accent); margin-bottom: 0.5rem; }
-    p { margin-bottom: 1.5rem; line-height: 1.6; }
-    button {
-      background: var(--accent);
-      border: none;
-      color: #121212;
-      padding: 0.8rem 1.2rem;
-      border-radius: 10px;
-      font-size: 1rem;
+    #connect-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: red;
       cursor: pointer;
-      transition: background 0.3s;
-      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px red;
+      transition: all 0.3s ease;
     }
-    button:hover { background: #c287ff; }
-    iframe {
-      width: 100%;
-      height: 60vh;
-      border: none;
-      border-radius: 1rem;
+    #connect-dot.connected {
+      background-color: #00ff88;
+      box-shadow: 0 0 10px #00ff88;
     }
-    #profile-info {
-      display: none;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
+    #up-address {
+      margin-top: 10px;
+      font-size: 0.85rem;
       color: #ccc;
-    }
-    @media(max-width:768px) {
-      .container { padding: 1.5rem; }
-      h2 { font-size: 1.5rem; }
-      iframe { height: 70vh; }
+      text-align: center;
+      font-family: monospace;
     }
   </style>
 </head>
 <body>
-  <main class="container" role="region" aria-label="Vault LYX Staking">
-    <h2>Vault LYX Staking</h2>
-    <p>Gérez vos LYX et participez au staking sécurisé via <strong>Universal Page</strong>.</p>
+  <div>
+    <div id="connect-dot" title="Cliquez pour vous connecter"></div>
+    <div id="up-address"></div>
+  </div>
 
-    <button id="connect-btn">Se connecter avec votre Universal Profile</button>
-    <div id="profile-info">Connecté avec : <span id="up-address"></span></div>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const dot = document.getElementById('connect-dot');
+      const addressDiv = document.getElementById('up-address');
 
-    <iframe
-      src="https://universal.page/vault"
-      allow="clipboard-read; clipboard-write; fullscreen"
-      allowfullscreen
-      title="Interface de staking Vault LYX"
-    ></iframe>
-  </main>
+      dot.addEventListener('click', async () => {
+        try {
+          const provider = await window.lukso.connect();
+          const accounts = await provider.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            dot.classList.add('connected');
+            addressDiv.textContent = accounts[0];
+          }
+        } catch (err) {
+          alert("Erreur de connexion: " + err.message);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
