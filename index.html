@@ -66,7 +66,7 @@
       const dot = document.getElementById('connect-dot');
       const addressDiv = document.getElementById('up-address');
 
-      if (typeof window.ethereum !== 'undefined') {
+      if (window.ethereum && window.ethereum.isUniversalProfile) {
         dot.addEventListener('click', async () => {
           try {
             await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -77,11 +77,11 @@
               addressDiv.textContent = accounts[0];
             }
           } catch (err) {
-            alert("Erreur de connexion: " + err.message);
+            alert("Erreur de connexion à l'extension UP: " + err.message);
           }
         });
       } else {
-        alert("Extension LUKSO non détectée. Veuillez installer l'extension UP.");
+        alert("Veuillez utiliser l'extension LUKSO Universal Profile pour vous connecter.");
       }
     });
   </script>
