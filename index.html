@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Staking Vault + UP Connect</title>
-  <script src="https://unpkg.com/@lukso/web-components@latest/dist/index.js" defer></script>
   <style>
     body {
       background-color: #121212;
@@ -67,21 +66,23 @@
       const dot = document.getElementById('connect-dot');
       const addressDiv = document.getElementById('up-address');
 
-      const provider = new window.LUKSOProvider();
+      if (typeof window.ethereum !== 'undefined') {
+        dot.addEventListener('click', async () => {
+          try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
 
-      dot.addEventListener('click', async () => {
-        try {
-          await provider.enable(); // au lieu de connect()
-          const accounts = await provider.request({ method: 'eth_accounts' });
-
-          if (accounts.length > 0) {
-            dot.classList.add('connected');
-            addressDiv.textContent = accounts[0];
+            if (accounts.length > 0) {
+              dot.classList.add('connected');
+              addressDiv.textContent = accounts[0];
+            }
+          } catch (err) {
+            alert("Erreur de connexion: " + err.message);
           }
-        } catch (err) {
-          alert("Erreur de connexion: " + err.message);
-        }
-      });
+        });
+      } else {
+        alert("Extension LUKSO non détectée. Veuillez installer l'extension UP.");
+      }
     });
   </script>
 </body>
