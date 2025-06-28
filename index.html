@@ -63,14 +63,17 @@
   ></iframe>
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       const dot = document.getElementById('connect-dot');
       const addressDiv = document.getElementById('up-address');
 
+      const provider = new window.LUKSOProvider();
+
       dot.addEventListener('click', async () => {
         try {
-          const provider = await window.lukso.connect();
+          await provider.enable(); // au lieu de connect()
           const accounts = await provider.request({ method: 'eth_accounts' });
+
           if (accounts.length > 0) {
             dot.classList.add('connected');
             addressDiv.textContent = accounts[0];
