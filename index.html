@@ -62,28 +62,32 @@
   ></iframe>
 
   <script>
-    window.addEventListener('DOMContentLoaded', async () => {
+    window.addEventListener('DOMContentLoaded', () => {
       const dot = document.getElementById('connect-dot');
       const addressDiv = document.getElementById('up-address');
 
-      if (window.ethereum && window.ethereum.isUniversalProfile) {
-        dot.addEventListener('click', async () => {
-          try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      dot.addEventListener('click', async () => {
+        if (!window.ethereum) {
+          alert("Aucune extension de wallet détectée. Installez l'extension Universal Profile (UP) de LUKSO.");
+          return;
+        }
 
-            if (accounts.length > 0) {
-              dot.classList.add('connected');
-              addressDiv.textContent = accounts[0];
-            }
-          } catch (err) {
-            alert("Erreur de connexion à l'extension UP: " + err.message);
+        try {
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+
+          if (accounts.length > 0) {
+            dot.classList.add('connected');
+            addressDiv.textContent = accounts[0];
+          } else {
+            alert("Aucun compte détecté. Veuillez vérifier votre extension UP.");
           }
-        });
-      } else {
-        alert("Veuillez utiliser l'extension LUKSO Universal Profile pour vous connecter.");
-      }
+        } catch (err) {
+          alert("Erreur de connexion : " + err.message);
+        }
+      });
     });
   </script>
 </body>
 </html>
+
