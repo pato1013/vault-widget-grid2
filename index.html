@@ -1,93 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staking Vault + UP Connect</title>
-  <style>
-    body {
-      background-color: #121212;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      min-height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
+const provider = window.lukso;
+
+if (provider) {
+  dot.addEventListener('click', async () => {
+    try {
+      const accounts = await provider.request({ method: 'eth_requestAccounts' });
+      if (accounts.length > 0) {
+        dot.classList.add('connected');
+        addressDiv.textContent = accounts[0];
+      }
+    } catch (err) {
+      alert("Erreur de connexion: " + err.message);
     }
-    #connect-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-color: red;
-      cursor: pointer;
-      box-shadow: 0 0 10px red;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-    }
-    #connect-dot.connected {
-      background-color: #00ff88;
-      box-shadow: 0 0 10px #00ff88;
-    }
-    #up-address {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      color: #ccc;
-      text-align: center;
-      font-family: monospace;
-    }
-    iframe {
-      width: 100%;
-      max-width: 900px;
-      height: 80vh;
-      border: none;
-      border-radius: 10px;
-      margin-top: 30px;
-    }
-  </style>
-</head>
-<body>
-  <!-- Bouton de connexion UP -->
-  <div id="connect-dot" title="Cliquez pour vous connecter"></div>
-  <div id="up-address"></div>
-
-  <!-- Iframe du Vault de Staking LYX -->
-  <iframe
-    src="https://universal.page/vault"
-    allowfullscreen
-    allow="clipboard-read; clipboard-write; fullscreen"
-    title="Staking LYX Vault"
-  ></iframe>
-
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const dot = document.getElementById('connect-dot');
-      const addressDiv = document.getElementById('up-address');
-
-      dot.addEventListener('click', async () => {
-        if (!window.ethereum) {
-          alert("Aucune extension de wallet détectée. Installez l'extension Universal Profile (UP) de LUKSO.");
-          return;
-        }
-
-        try {
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-
-          if (accounts.length > 0) {
-            dot.classList.add('connected');
-            addressDiv.textContent = accounts[0];
-          } else {
-            alert("Aucun compte détecté. Veuillez vérifier votre extension UP.");
-          }
-        } catch (err) {
-          alert("Erreur de connexion : " + err.message);
-        }
-      });
-    });
-  </script>
-</body>
-</html>
-
+  });
+} else {
+  alert("Extension UP non détectée. Veuillez l’installer pour continuer.");
+}
